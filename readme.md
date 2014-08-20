@@ -55,44 +55,41 @@ For this lab, we'd like you to strengthen your Rails console skills. This lab is
 	```
 7. Combine all of these individual validations into one validation (using validate and a hash)	
 	```
-	validates :first_name, :presence => true,
-		:length => {:minimum => 4},
-		:allow_blank => false
-	```
-	```
-	validates :last_name, :presence => true,
-		:length => {:minimum =>4},
-		:allow_blank => false,
-		:uniqueness => true
+	validates :first_name,
+  :presence => true,
+  :length => {:minimum => 5}
+```
+```
+validates :last_name,
+  :presence => true,
+  :length => {:minimum => 5},
+  :uniqueness => true
 	```
 
 8. Using the create syntax create a student named John Doe who is 33 years old
 	```
-	him=Student.new
-	him.first_name = "John"
-	him.last_name = "Doe"
-	him.age = 33
+	john = Student.create(:first_name => "John", :last_name => "Doe", :age => 33)
 	```
 9. Show if this new student entry is valid
 	```
-	him.save should return an error 
+	john.valid? 
 	```
 10. Show the number of errors for this student instance
  	```
- (0.4ms)  BEGIN
-  Student Exists (0.6ms)  SELECT  1 AS one FROM "students"  WHERE "students"."last_name" = 'Doe' LIMIT 1
-   (0.2ms)  ROLLBACK
+ john.errors.size
 	```   
    
 11. In one command, Change John Doe's name to Jonathan Doesmith 
 	```
-	previously created John Doe by using him = Student.new....
-	him.update_attributes(:last_name => "Doesmith")
+	john.update_attributes(:first_name => "Jonathan", :last_name => "Doesmith") 
 	```
 12. Clear the errors array
+	```
+	john.errors.clear
+	```
 13. Save Jonathan Doesmith
 	```
-	him.save 
+	john.save 
 	```
 15. Find all of the Students
 	```
@@ -114,15 +111,36 @@ For this lab, we'd like you to strengthen your Rails console skills. This lab is
 	```
 	Student.find_by_last_name("Doesmith")
 	```
-21. Find all of the students and limit the 	search to 5 students, starting with the 2nd student and finally, order the students in alphabetical order
-
-
+21. Find all of the students and limit the search to 5 students, starting with the 2nd student and finally, order the students in alphabetical order
+	```
+	Student.order(:first_name).offset(1).limit(5)
+    ```
 20. Delete Jonathan Doesmith
 	```
 	Student.find_by_id(3).destroy	
 	```
 ### Bonus
 1. Use the validates_format_of and regex to only validate names that consist of letters (no numbers or symbols) and start with a capital letter
-2. Write a custom validation to ensure that no one named Delmer Reed, Tim Licata, Anil Bridgpal or Elie Schoppik is included in the students table
-
+```
+ validates_format_of :first_name, :with => /\A[A-Z][a-zA-Z]*\z/
+  validates_format_of :last_name, :with => /\A[A-Z][a-zA-Z]*\z/
+```
+2. Write a custom validation to ensure that no one named Delmer Reed, Tim Licata, Anil 
+Bridgpal or Elie Schoppik is included in the students table
+   ```
+   INSTRUCTORS = [{:first_name => "Delmer", :last_name => "Reed"},
+                 {:first_name => "Tim", :last_name => "Licata"},
+                 {:first_name => "Anil", :last_name => "Bridgpal"},
+                 {:first_name => "Elie", :last_name => "Schoppik"}]
+```
+```
+  validate :no_instructors
+  def no_instructors
+    INSTRUCTORS.each do |teacher|
+      if teacher[:first_name] == first_name and teacher[:last_name] == last_name
+        errors.add(:username, "This is a restricted instructor name")
+      end
+    end
+  end
+  ```
 

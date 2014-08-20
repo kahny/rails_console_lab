@@ -10,7 +10,7 @@ For this lab, we'd like you to strengthen your Rails console skills. This lab is
 ### Tasks to create
 
 1. Using the new/save syntax, create a student, first and last name and an age 
-
+	```
 	student = Student.new(:first_name=>"Connie", :last_name=>"Chang", :age=>24)
 	```	
 		
@@ -74,36 +74,53 @@ him.last_name = "Doe"
 him.age = 33
 ```
 9. Show if this new student entry is valid
+```
 him.save should return an error 
-
+```
 10. Show the number of errors for this student instance
+ ```
  (0.4ms)  BEGIN
   Student Exists (0.6ms)  SELECT  1 AS one FROM "students"  WHERE "students"."last_name" = 'Doe' LIMIT 1
    (0.2ms)  ROLLBACK
-   
+```   
    
 11. In one command, Change John Doe's name to Jonathan Doesmith 
+```
 previously created John Doe by using him = Student.new....
 him.update_attributes(:last_name => "Doesmith")
+```
 12. Clear the errors array
 13. Save Jonathan Doesmith
-	him.save 
+```
+him.save 
+```
 15. Find all of the Students
+	```
 	Student.all
+```
 16. Find the student with an ID of 128 and if it does not exist, make sure it returns nil and not an error
+	```
 	Student.find_by_id(128)
+```
 17. Find the first student in the table
+	```
 	Student.first
+```
 18. Find the last student in the table
+```	
 	Student.last
+```
 19. Find the student with the last name of Doesmith
+	```
 	Student.find_by_last_name("Doesmith")
+```
 21. Find all of the students and limit the 	search to 5 students, starting with the 2nd student and finally, order the students in alphabetical order
 
 
-
 20. Delete Jonathan Doesmith
+```
 Student.find_by_id(3).destroy	
+```
 ### Bonus
 1. Use the validates_format_of and regex to only validate names that consist of letters (no numbers or symbols) and start with a capital letter
 2. Write a custom validation to ensure that no one named Delmer Reed, Tim Licata, Anil Bridgpal or Elie Schoppik is included in the students table
